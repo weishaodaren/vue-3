@@ -22,7 +22,9 @@ import {
   onBeforeUpdate,
   unref,
   toRef,
-  toRefs
+  toRefs,
+  isRef,
+  isProxy
 } from "vue";
 export default {
   name: "Kitty",
@@ -60,6 +62,8 @@ export default {
     stateAsRefs.fo.value = stateAsRefs.fo.value * 10;
     console.log(stateAsRefs.fo.value, state_.fo);
     const { fo, ba } = stateAsRefs;
+    console.log(isRef(state_));
+    console.log(isProxy(ba));
     return {
       kitty_,
       list,

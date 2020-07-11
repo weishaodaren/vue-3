@@ -9,7 +9,15 @@
 </template>
 
 <script>
-import { watchEffect, ref, reactive, computed, readonly, onMounted } from "vue";
+import {
+  watchEffect,
+  ref,
+  reactive,
+  computed,
+  readonly,
+  onMounted,
+  watch
+} from "vue";
 
 export default {
   props: {
@@ -19,7 +27,6 @@ export default {
     // context {attrs、slots、emit}
     watchEffect(() => {
       console.log(`msg is ${props.msg}`);
-      console.log(attrs);
     });
     const attrs_ = ref(attrs);
     const reactiveAttrs = reactive(attrs);
@@ -36,9 +43,7 @@ export default {
     console.log(count.value, one.value);
 
     const count_0 = ref(1);
-    const plusOne = computed(() => count_0.value + 1);
     count_0.value = 10;
-    console.log(plusOne.value);
 
     const count_1 = ref(2);
     const plusOne_1 = computed({
@@ -68,7 +73,6 @@ export default {
       });
     });
     const count_2 = ref(101);
-    watchEffect(() => console.log(count_2.value));
     count_2.value = 98;
     const xixi = "xixix";
 
@@ -77,30 +81,19 @@ export default {
       console.log("now is onMounted");
     });
 
-    watchEffect(
-      () => {
-        console.log(1);
-      },
-      {
-        flush: "sync"
+    const state_0 = reactive({ count: 0 });
+    watch(
+      () => state_0.count, // 监听getter
+      (n, o) => {
+        console.log(n, o);
       }
     );
-    watchEffect(
-      () => {
-        console.log(2);
-      },
-      {
-        flush: "post"
-      }
-    );
-    watchEffect(
-      () => {
-        console.log(3);
-      },
-      {
-        flush: "pre"
-      }
-    );
+    state_0.count++;
+    const state_1 = ref(1);
+    watch(state_1, (n, o) => {
+      console.log(n, o);
+    });
+    state_1.value = 9;
     return {
       attrs_,
       reactiveAttrs,

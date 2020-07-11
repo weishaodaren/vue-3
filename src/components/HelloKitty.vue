@@ -9,16 +9,31 @@
         }
       "
     >
-      {{ item }}
+      {{ item }}---{{ "fo:" + fo }} ----{{ "ba:" + ba }}
     </h1>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, reactive, onBeforeUpdate, unref, toRef } from "vue";
+import {
+  ref,
+  onMounted,
+  reactive,
+  onBeforeUpdate,
+  unref,
+  toRef,
+  toRefs
+} from "vue";
 export default {
   name: "Kitty",
-  setup() {
+  props: {
+    kitty: {
+      type: Object
+    }
+  },
+  setup(props) {
+    const name = toRef(props.kitty, "name");
+    console.log(name.value);
     const kitty_ = ref(null);
     onMounted(() => {
       console.log(kitty_.value);
@@ -38,10 +53,19 @@ export default {
     fooRef.value++;
     state.foo++;
     console.log(state.foo, fooRef.value);
+
+    const state_ = reactive({ fo: 2, ba: 3 });
+    const stateAsRefs = toRefs(state_);
+    state_.fo = state_.fo * 10;
+    stateAsRefs.fo.value = stateAsRefs.fo.value * 10;
+    console.log(stateAsRefs.fo.value, state_.fo);
+    const { fo, ba } = stateAsRefs;
     return {
       kitty_,
       list,
-      divs
+      divs,
+      fo,
+      ba
     };
   }
 };

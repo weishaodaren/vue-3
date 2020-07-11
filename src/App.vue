@@ -6,11 +6,15 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld";
+import { ref, provide } from "vue";
 
 export default {
   name: "App",
   components: {
     HelloWorld
+  },
+  setup() {
+    provide("customVal", ref("dark"));
   }
 };
 </script>

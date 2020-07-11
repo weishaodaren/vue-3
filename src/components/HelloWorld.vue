@@ -4,7 +4,7 @@
     <h1 @click="handleClick">click me</h1>
     {{ count }}
     <br />
-    {{ state }}----{{ count_2 }}----{{ xixi }}
+    {{ state }}----{{ count_2 }}----{{ xixi }}----{{ customVal }}
   </div>
 </template>
 
@@ -16,10 +16,13 @@ import {
   computed,
   readonly,
   onMounted,
-  watch
+  watch,
+  onBeforeMount,
+  inject
 } from "vue";
 
 export default {
+  name: "Hello",
   props: {
     msg: String
   },
@@ -84,16 +87,32 @@ export default {
     const state_0 = reactive({ count: 0 });
     watch(
       () => state_0.count, // 监听getter
-      (n, o) => {
+      (n, o, onInvalidate) => {
         console.log(n, o);
+        onInvalidate(() => {
+          console.log("xixixix");
+        });
       }
     );
     state_0.count++;
     const state_1 = ref(1);
-    watch(state_1, (n, o) => {
-      console.log(n, o);
-    });
+    watch(
+      state_1,
+      (n, o) => {
+        console.log(n, o);
+      },
+      { immediate: true, deep: true }
+    );
     state_1.value = 9;
+
+    onBeforeMount(() => {
+      console.log("onBeforeMount");
+    });
+    const customVal = inject("customVal", ref("light"));
+    watchEffect(() => {
+      console.log(`theme set to : ${customVal.value}`);
+    });
+    customVal.value = "light";
     return {
       attrs_,
       reactiveAttrs,
@@ -101,7 +120,8 @@ export default {
       count,
       state,
       count_2,
-      xixi
+      xixi,
+      customVal
     };
   }
 };

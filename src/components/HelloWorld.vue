@@ -4,12 +4,12 @@
     <h1 @click="handleClick">click me</h1>
     {{ count }}
     <br />
-    {{ state }}
+    {{ state }}----{{ count_2 }}----{{ xixi }}
   </div>
 </template>
 
 <script>
-import { watchEffect, ref, reactive, computed } from "vue";
+import { watchEffect, ref, reactive, computed, readonly, onMounted } from "vue";
 
 export default {
   props: {
@@ -50,14 +50,65 @@ export default {
     plusOne_1.value = 10.02;
     count_1.value = -100;
     plusOne_1.value = -1000;
-    console.log(plusOne_1.value);
 
+    const original = reactive({ count: 0 });
+    const copy = readonly(original);
+    watchEffect(() => {
+      console.log(copy.count);
+    });
+    const stop = watchEffect(() => console.log(11111));
+    stop();
+
+    const token = ref(0);
+    watchEffect(async onInvalidate => {
+      token.value = 1;
+
+      await onInvalidate(() => {
+        token.value = 2;
+      });
+    });
+    const count_2 = ref(101);
+    watchEffect(() => console.log(count_2.value));
+    count_2.value = 98;
+    const xixi = "xixix";
+
+    onMounted(() => {
+      console.log(document.querySelector("#app"));
+      console.log("now is onMounted");
+    });
+
+    watchEffect(
+      () => {
+        console.log(1);
+      },
+      {
+        flush: "sync"
+      }
+    );
+    watchEffect(
+      () => {
+        console.log(2);
+      },
+      {
+        flush: "post"
+      }
+    );
+    watchEffect(
+      () => {
+        console.log(3);
+      },
+      {
+        flush: "pre"
+      }
+    );
     return {
       attrs_,
       reactiveAttrs,
       handleClick,
       count,
-      state
+      state,
+      count_2,
+      xixi
     };
   }
 };

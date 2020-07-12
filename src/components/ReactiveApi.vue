@@ -2,6 +2,7 @@
   <div>
     <input type="text" v-model="text" />
     <h1>{{ foo_ }}</h1>
+    <Button />
   </div>
 </template>
 <script>
@@ -11,7 +12,11 @@ import {
   markRaw,
   isReactive,
   reactive,
-  shallowRef
+  shallowRef,
+  defineComponent,
+  h,
+  ref,
+  toRefs
 } from "vue";
 
 function useDebouncedRef(value, delay = 200) {
@@ -32,8 +37,32 @@ function useDebouncedRef(value, delay = 200) {
     };
   });
 }
+
+const Button = defineComponent({
+  setup() {
+    const didi = ref(null);
+    const bubu = reactive({ name: "weishaodaren" });
+    const bibi = () => {
+      setTimeout(() => {
+        bubu["age"] = 25;
+      }, 1000);
+    };
+    const { name } = toRefs(bubu);
+    return () =>
+      h(
+        "button",
+        {
+          ref: didi,
+          onClick: bibi()
+        },
+        `我是${name.value}, 今年${bubu.age}`
+      );
+  }
+});
+
 export default {
   name: "Api",
+  components: { Button },
   setup() {
     const text = useDebouncedRef("hello", 500);
     onBeforeUpdate(() => {

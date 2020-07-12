@@ -24,9 +24,10 @@ import {
   toRef,
   toRefs,
   isRef,
-  isProxy
+  isProxy,
+  createComponent
 } from "vue";
-export default {
+export default createComponent({
   name: "Kitty",
   props: {
     kitty: {
@@ -72,7 +73,7 @@ export default {
       ba
     };
   }
-};
+});
 </script>
 
 <style lang="stylus"></style>
